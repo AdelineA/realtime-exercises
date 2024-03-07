@@ -15,9 +15,16 @@ async function postNewMsg(user, text) {
 }
 
 const ws =  new WebSocket('ws://localhost:8080',['json','xml']);
+
 ws.addEventListener('open', () => {
   console.log('connected');
   presence.innerText= '🟢'
+});
+
+ws.addEventListener('message', (event) => {
+  const data = JSON.parse(event.data);
+  allChat = data.msg;
+  render();
 });
 
 function render() {

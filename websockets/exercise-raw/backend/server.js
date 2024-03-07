@@ -13,7 +13,7 @@ const getMsgs = () => Array.from(msg).reverse();
 
 msg.push({
   user: "Adeline",
-  text: "Hi",
+  text: "Hi, I'm Adeline!",
   time: Date.now(),
 });
 
@@ -32,7 +32,7 @@ server.on('upgrade', (req, socket) => {
   const acceptKey = req.headers['sec-websocket-key'];
   const acceptValue = generateAcceptValue(acceptKey);
   const headers =  [
-    'HTTP/1.1 101 Switching Protocols',
+    'HTTP/1.1 101 Switching Protocols Handshake',
     'Upgrade: websocket',
     'Connection: Upgrade',
     `Sec-WebSocket-Accept: ${acceptValue}`,
@@ -42,8 +42,18 @@ server.on('upgrade', (req, socket) => {
   ];
 
   socket.write(headers.join('\r\n'));
+  socket.write(objToResponse({ msg: getMsgs() }));
   
-  console.log('upgrade requested');
+  socket.on( 'data', (buffer)=>{
+    const message = parseMessage(buffer);
+    if(message){
+      msg.push({
+        user: message.user,
+        text: message.text,
+        time: Date.now(),
+      });
+    }
+  })
 })
 
 const port = process.env.PORT || 8080;
