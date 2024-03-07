@@ -24,37 +24,36 @@ const server = http.createServer((request, response) => {
   });
 });
 
-server.on('upgrade', (req, socket) => {
-  if(req.headers['upgrade'] !== 'websocket') {
-    socket.end('HTTP/1.1 400 Bad Request');
+server.on("upgrade", (req, socket) => {
+  if (req.headers["upgrade"] !== "websocket") {
+    socket.end("HTTP/1.1 400 Bad Request");
     return;
   }
-  const acceptKey = req.headers['sec-websocket-key'];
+  const acceptKey = req.headers["sec-websocket-key"];
   const acceptValue = generateAcceptValue(acceptKey);
-  const headers =  [
-    'HTTP/1.1 101 Switching Protocols Handshake',
-    'Upgrade: websocket',
-    'Connection: Upgrade',
+  const headers = [
+    "HTTP/1.1 101 Switching Protocols Handshake",
+    "Upgrade: websocket",
+    "Connection: Upgrade",
     `Sec-WebSocket-Accept: ${acceptValue}`,
-    'Sec-WebSocket-Protocol: json',
-    '\r\n'
-
+    "Sec-WebSocket-Protocol: json",
+    "\r\n",
   ];
 
-  socket.write(headers.join('\r\n'));
+  socket.write(headers.join("\r\n"));
   socket.write(objToResponse({ msg: getMsgs() }));
-  
-  socket.on( 'data', (buffer)=>{
+
+  socket.on("data", (buffer) => {
     const message = parseMessage(buffer);
-    if(message){
+    if (message) {
       msg.push({
         user: message.user,
         text: message.text,
         time: Date.now(),
       });
     }
-  })
-})
+  });
+});
 
 const port = process.env.PORT || 8080;
 server.listen(port, () =>
