@@ -5,20 +5,18 @@ const msgs = document.getElementById("msgs");
 const presence = document.getElementById("presence-indicator");
 let allChat = [];
 
-const socket = io('https://localhost:8080');
+const socket = io('http://localhost:8080');
 
 socket.on('connect', () =>{
-  console.log('connected');
   presence.innerText= '🟢'
 })
 
 socket.on('disconnect', () =>{
-  console.log('disconnected');
   presence.innerText= '🔴'
 
 })
 
-socket.on('msgs: get', ({ data }) => {
+socket.on('msgs: get', ( data ) => {
   allChat = data.msgs;
   render();
 });

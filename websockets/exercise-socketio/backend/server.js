@@ -22,7 +22,7 @@ const server = http.createServer((request, response) => {
 
 const io = new Server(server, {});
 
-io.on('connection', socket => {
+io.on('connection', ( socket ) => {
   console.log(`connected: ${socket.id}`)
   socket.emit('msgs: get', { msgs: getMsgs() })
 
@@ -30,14 +30,14 @@ io.on('connection', socket => {
     console.log(`disconnected: ${socket.id}`)
   })
 
-  socket.on('msg;post', data){
+  socket.on('msg:post', (data) => {
     msg.push({
       user: data.user,
       text: data.text,
       time: Date.now()  
     })
     io.emit('msgs: get', { msgs: getMsgs() })
-  }
+  })
 
 })
 
