@@ -7,8 +7,8 @@ const msg = new nanobuffer(50);
 const getMsgs = () => Array.from(msg).reverse();
 
 msg.push({
-  user: "brian",
-  text: "hi",
+  user: "Adeline",
+  text: "Hello, This is Socket.io chat app!",
   time: Date.now(),
 });
 
@@ -19,11 +19,17 @@ const server = http.createServer((request, response) => {
   });
 });
 
-/*
- *
- * Code goes here
- *
- */
+
+const io = new Server(server, {});
+
+io.on('connection', socket => {
+  console.log(`connected: ${socket.id}`)
+
+  socket.on('disconnect', () => {
+    console.log(`disconnected: ${socket.id}`)
+  })
+
+})
 
 const port = process.env.PORT || 8080;
 server.listen(port, () =>

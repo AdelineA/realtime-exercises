@@ -4,12 +4,20 @@ const chat = document.getElementById("chat");
 const msgs = document.getElementById("msgs");
 const presence = document.getElementById("presence-indicator");
 let allChat = [];
+window.WebSocket = null;
 
-/*
- *
- * Code goes here
- *
- */
+const socket = io('https://localhost:8080');
+
+socket.on('connect', () =>{
+  console.log('connected');
+  presence.innerText= '🟢'
+})
+
+socket.on('disconnect', () =>{
+  console.log('disconnected');
+  presence.innerText= '🔴'
+
+})
 
 chat.addEventListener("submit", function (e) {
   e.preventDefault();
