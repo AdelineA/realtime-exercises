@@ -16,8 +16,8 @@ socket.on('disconnect', () =>{
 
 })
 
-socket.on('msgs: get', ( data ) => {
-  allChat = data.msgs;
+socket.on('msg: get', (data) => {
+  allChat = data.msg;
   render();
 });
 
@@ -33,7 +33,7 @@ async function postNewMsg(user, text) {
   text,
  }
 
- socket.emit('msgs: post', data)
+ socket.emit('msg: post', data);
 }
 
 function render() {
