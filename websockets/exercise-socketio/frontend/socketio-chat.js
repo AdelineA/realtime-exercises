@@ -4,7 +4,6 @@ const chat = document.getElementById("chat");
 const msgs = document.getElementById("msgs");
 const presence = document.getElementById("presence-indicator");
 let allChat = [];
-window.WebSocket = null;
 
 const socket = io('https://localhost:8080');
 
@@ -19,6 +18,11 @@ socket.on('disconnect', () =>{
 
 })
 
+socket.on('msgs: get', ({ data }) => {
+  allChat = data.msgs;
+  render();
+});
+
 chat.addEventListener("submit", function (e) {
   e.preventDefault();
   postNewMsg(chat.elements.user.value, chat.elements.text.value);
@@ -26,11 +30,12 @@ chat.addEventListener("submit", function (e) {
 });
 
 async function postNewMsg(user, text) {
-  /*
-   *
-   * Code goes here
-   *
-   */
+ const data = {
+  user,
+  text,
+ }
+
+ socket.emit('msgs: post', data)
 }
 
 function render() {
